@@ -23,9 +23,9 @@ gpu_name=$1
     disk_bw>=500 \
     disk_space>=10 \
     duration>=1 \
-    inet_down>=50 \
+    inet_down>=200 \
     inet_down_cost<=0.1 \
-    inet_up>=50 \
+    inet_up>=200 \
     inet_up_cost<=0.1 \
     rentable=True \
     rented=False \
@@ -34,7 +34,6 @@ gpu_name=$1
     cpu_ram>=32 \
     compute_cap>=750 \
     storage_cost<=10 \
-    ubuntu_version>=20.04 \
     " \
     --limit 5 \
     --order "dph"
@@ -48,9 +47,9 @@ if [ -z "$offer_id" ]; then
 fi
 
 echo "Attempting to rent GPU $gpu_name with offer ID $offer_id..."
-output=$(./vast.py create instance $offer_id --image $IMAGE --disk $DISK --ssh --direct --raw)
-echo $output
+output=$(./vast.py create instance $offer_id --image $IMAGE --disk $DISK --onstart ./scripts/setup.sh --ssh --direct --raw)
 contract_id=$(echo $output | jq .new_contract)
+echo "Contract ID: $contract_id"
 
 # Wait until the instance is running
 state=$(./vast.py show instance $contract_id --raw | jq .actual_status)
