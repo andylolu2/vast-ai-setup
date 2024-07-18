@@ -17,7 +17,7 @@ gpu_name=$1
 
 ./vast.py search offers \
     "\
-    gpu_name=$gpu_name \
+    gpu_name in [$gpu_name] \
     num_gpus=1 \
     cuda_vers>=12.1 \
     disk_bw>=500 \
@@ -35,7 +35,7 @@ gpu_name=$1
     compute_cap>=750 \
     storage_cost<=10 \
     " \
-    --limit 5 \
+    --limit 10 \
     --order "dph"
 
 # Ask the user to pick an offer by entering the offer ID, or abort
@@ -60,4 +60,10 @@ while [ "$state" != "\"running\"" ]; do
 done
 
 # Get the instance's SSH command
-./vast.py ssh-url $contract_id
+ip_address=$(./vast.py show instance $contract_id --raw | jq .public_ipaddr | tr -d '"')
+port=$(./vast.py show instance $contract_id --raw | jq .direct_port_start)
+
+echo "Open VS Code and connect to the instance using the following command:"
+echo "code-insiders --remote ssh-remote+root@$ip_address:$port /root"
+echo "Or use the following command to SSH into the instance:"
+echo "ssh ssh://root@$ip_address:$port"
