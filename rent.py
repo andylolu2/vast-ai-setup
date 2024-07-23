@@ -59,14 +59,10 @@ if __name__ == "__main__":
 
     print("Waiting for the instance to start...")
     state = run_command_json(f"python vast.py show instance {contract_id} --raw")
-    while state["actual_status"] != "running":
+    while state["direct_port_start"] == -1:
         print(f"Status: {state['status_msg']}")
         time.sleep(5)
         state = run_command_json(f"python vast.py show instance {contract_id} --raw")
-
-    # Make sure the state finalizes
-    time.sleep(10)
-    state = run_command_json(f"python vast.py show instance {contract_id} --raw")
 
     public_ipaddr = state["public_ipaddr"]
     port = state["direct_port_start"]
