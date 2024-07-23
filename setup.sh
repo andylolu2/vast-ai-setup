@@ -1,9 +1,7 @@
 #!/bin/bash
 
-set -e
-
 # Disable tmux auto start by vast.ai
-touch ~/.no_auto_tmux;
+touch ~/.no_auto_tmux
 
 apt update
 apt install -y software-properties-common
