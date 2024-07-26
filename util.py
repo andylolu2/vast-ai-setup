@@ -32,8 +32,8 @@ BASE_REQUIREMENTS = "\
     rented=False \
     reliability>=0.9 \
     cpu_cores>=4 \
-    cpu_ram>=32 \
-    storage_cost<=10 \
+    cpu_ram>=16 \
+    storage_cost<=0.3 \
 "
 
 if __name__ == "__main__":

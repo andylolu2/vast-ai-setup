@@ -18,7 +18,7 @@ if __name__ == "__main__":
         "--disk",
         type=int,
         default=20,
-        help="Disk space in GB (default: 50)",
+        help="Disk space in GB (default: 20)",
     )
     parser.add_argument(
         "--image",
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     matched_gpus = [gpu for gpu in all_gpus if re.fullmatch(args.gpu_name, gpu)]
 
     output = run_command(
-        f"python vast.py search offers 'gpu_name in {matched_gpus} {BASE_REQUIREMENTS}' --order dph"
+        f"python vast.py search offers 'gpu_name in {matched_gpus} {BASE_REQUIREMENTS}' --storage {args.disk} --order dph"
     )
     # Show first 10 results (+1 for the header)
     # Note: There is a "--limit n" flag in the vast.py script, but it's buggy
