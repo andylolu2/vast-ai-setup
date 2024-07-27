@@ -18,7 +18,7 @@ def run_command_json(command: str):
     return json.loads(run_command(command))
 
 
-BASE_REQUIREMENTS = "\
+BASE_REQUIREMENTS = f"\
     num_gpus=1 \
     cuda_vers>=12.1 \
     disk_bw>=500 \
@@ -31,14 +31,7 @@ BASE_REQUIREMENTS = "\
     rentable=True \
     rented=False \
     reliability>=0.9 \
-    cpu_cores>=4 \
+    cpu_cores_effective>=4 \
     cpu_ram>=16 \
-    storage_cost<=0.3 \
 "
 
-if __name__ == "__main__":
-    output = run_command_json(
-        f"python vast.py search offers '{BASE_REQUIREMENTS}' --raw --limit 1000"
-    )
-    gpu_names = sorted(list(set([offer["gpu_name"] for offer in output])))
-    print(json.dumps(gpu_names, indent=2))
