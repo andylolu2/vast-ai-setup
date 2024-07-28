@@ -33,5 +33,8 @@ git config --global user.name "andylolu2"
 git clone https://github.com/andylolu2/dotfiles ~/.dotfiles
 ~/.dotfiles/main.fish
 
+# Add github.com to known hosts to avoid confirmation when cloning with ssh
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+
 # Update paths for fish
 fish -c "fish_add_path /usr/local/nvidia/bin /usr/local/cuda/bin /opt/conda/bin /usr/local/nvidia/bin /usr/local/cuda/bin"
