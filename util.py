@@ -22,7 +22,6 @@ BASE_REQUIREMENTS = f"\
     num_gpus=1 \
     cuda_vers>=12.1 \
     disk_bw>=500 \
-    disk_space>=10 \
     duration>=1 \
     inet_down>=200 \
     inet_down_cost<=0.1 \
