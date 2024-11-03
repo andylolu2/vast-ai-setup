@@ -38,3 +38,5 @@ ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # Update paths for fish
 fish -c "fish_add_path /usr/local/nvidia/bin /usr/local/cuda/bin /opt/conda/bin /usr/local/nvidia/bin /usr/local/cuda/bin"
+
+mkdir -p ~/.bin ~/.local/bin

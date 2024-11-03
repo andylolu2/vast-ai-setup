@@ -1,3 +1,9 @@
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "requests",
+# ]
+# ///
 import argparse
 import json
 import re
@@ -6,6 +12,9 @@ import time
 from pathlib import Path
 
 from util import BASE_REQUIREMENTS, run_command, run_command_json
+
+PROJ_DIR = Path(__file__).parent
+VAST_EXE = PROJ_DIR / "vast.py"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -29,11 +38,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Find all GPUs that match the specified name or regex pattern
-    all_gpus = json.load(Path("gpu_names.json").open())
+    all_gpus = json.load((PROJ_DIR / "gpu_names.json").open())
     matched_gpus = [gpu for gpu in all_gpus if re.fullmatch(args.gpu_name, gpu)]
 
     output = run_command(
-        f"python vast.py search offers 'gpu_name in {matched_gpus} {BASE_REQUIREMENTS}' --storage {args.disk} --order dph"
+        f"python {VAST_EXE} search offers 'gpu_name in {matched_gpus} {BASE_REQUIREMENTS}' --storage {args.disk} --order dph"
     )
     # Show first 10 results (+1 for the header)
     # Note: There is a "--limit n" flag in the vast.py script, but it's buggy
@@ -46,10 +55,10 @@ if __name__ == "__main__":
 
     print(f"Attempting to rent offer ID {offer_id}...")
     output = run_command_json(
-        f"python vast.py create instance {offer_id} \
+        f"python {VAST_EXE} create instance {offer_id} \
         --image {args.image} \
         --disk {args.disk} \
-        --onstart ./setup.sh \
+        --onstart {PROJ_DIR / 'setup.sh'} \
         --ssh \
         --direct \
         --raw"
@@ -58,11 +67,11 @@ if __name__ == "__main__":
     print(f"Contract ID: {contract_id}")
 
     print("Waiting for the instance to start...")
-    state = run_command_json(f"python vast.py show instance {contract_id} --raw")
+    state = run_command_json(f"python {VAST_EXE} show instance {contract_id} --raw")
     while state["direct_port_start"] == -1:
         print(f"Status: {state['status_msg']}")
         time.sleep(5)
-        state = run_command_json(f"python vast.py show instance {contract_id} --raw")
+        state = run_command_json(f"python {VAST_EXE} show instance {contract_id} --raw")
 
     public_ipaddr = state["public_ipaddr"]
     port = state["direct_port_start"]
